@@ -117,7 +117,7 @@ public class ClientModelTest {
 
         // Assert
         assertFalse(violations.isEmpty());
-        assertEquals("O CPF é inválido", violations.iterator().next().getMessage());
+        assertEquals("O CPF é obrigatório", violations.iterator().next().getMessage());
     }
 
     @Test

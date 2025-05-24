@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fiap.trabalho1.fiap.entities.Order;
-import com.fiap.trabalho1.fiap.entities.OrderStatus;
 import com.fiap.trabalho1.fiap.gateways.OrderRepository;
 
 @Service
@@ -19,24 +18,23 @@ public class UpdateOrderStatusUseCase {
         this.orderRepository = orderRepository;
     }
 
-    public Order execute(UUID orderId, OrderStatus newStatus) {
-        Optional<Order> optionalOrder = this.orderRepository.findById(orderId);
+    public Order execute(UUID orderId, String newStatus) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
         if (optionalOrder.isEmpty()) {
             throw new RuntimeException("Pedido não encontrado: " + orderId);
         }
 
-        List<OrderStatus> validStatuses = List.of(OrderStatus.RECEIVED, OrderStatus.PREPARATION, OrderStatus.READY, OrderStatus.FINISHED);
-        if (!validStatuses.contains(newStatus)) {
+        List<String> validStatuses = List.of("RECEIVED", "PREPARATION", "READY", "FINISHED");
+        if (!validStatuses.contains(newStatus.toUpperCase())) {
             throw new IllegalArgumentException("Status inválido: " + newStatus);
         }
 
         Order order = optionalOrder.get();
-        if(!order.getisPaid() && newStatus != OrderStatus.RECEIVED) {
+        if(!order.getisPaid() && newStatus.toUpperCase() != "RECEIVED") {
             throw new IllegalArgumentException("Não pode trocar o status se não estiver pago.");
         }
-        
-        order.setStatus(newStatus);
-        return this.orderRepository.save(order);
+        order.setStatus(newStatus.toUpperCase());
+        return orderRepository.save(order);
     }
 }

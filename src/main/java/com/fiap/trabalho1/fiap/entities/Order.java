@@ -1,38 +1,26 @@
 package com.fiap.trabalho1.fiap.entities;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders") 
 public class Order {
-    
-	@Id
+    @Id
     private UUID id;
-    
-	private UUID clientId;
-    
+    private UUID clientId;
     private List<UUID> productIds;
-    
     private LocalDate orderDate;
-    
     private Double orderTotal;
-    
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
-    
+    private String status;
     private boolean isPaid;
 
     public Order() {}
 
-    public Order(UUID idOrder, UUID clientId, List<UUID> productIds, LocalDate orderDate, Double orderTotal, OrderStatus status) {
+    public Order(UUID idOrder, UUID clientId, List<UUID> productIds, LocalDate orderDate, Double orderTotal, String status) {
         this.id = idOrder;
         this.clientId = clientId;
         this.productIds = productIds;
@@ -45,7 +33,6 @@ public class Order {
     // Regras de negócio
     public void approve() {
         this.isPaid = true;
-        this.status = OrderStatus.PREPARATION;
     }
 
     public void cancel() {
@@ -75,11 +62,11 @@ public class Order {
         return orderTotal;
     }
 
-    public OrderStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -87,4 +74,5 @@ public class Order {
         return this.isPaid;
     }
 
+    
 }

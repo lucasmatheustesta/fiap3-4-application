@@ -4,11 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-
 import com.fiap.trabalho1.fiap.entities.Order;
-import com.fiap.trabalho1.fiap.entities.OrderStatus;
 import com.fiap.trabalho1.fiap.gateways.OrderRepository;
+
+import org.springframework.stereotype.Service;
 
 
 @Service
@@ -26,9 +25,8 @@ public class CreateOrderUseCase {
                 productIds,
                 LocalDate.now(),
                 orderTotal,
-                OrderStatus.RECEIVED
+                "RECEIVED"
         );
-        
         return orderRepository.save(order);
     }
 }

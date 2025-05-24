@@ -3,10 +3,12 @@ package com.fiap.trabalho1.fiap.usecases.category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
 import com.fiap.trabalho1.fiap.entities.Category;
 import com.fiap.trabalho1.fiap.gateways.CategoryRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Service

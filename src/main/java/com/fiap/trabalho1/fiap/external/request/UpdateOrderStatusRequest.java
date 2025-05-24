@@ -1,15 +1,15 @@
 package com.fiap.trabalho1.fiap.external.request;
 
-import com.fiap.trabalho1.fiap.entities.OrderStatus;
+import java.util.UUID;
 
 public class UpdateOrderStatusRequest {
-    private OrderStatus status;
+    private String status;
 
-    public OrderStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

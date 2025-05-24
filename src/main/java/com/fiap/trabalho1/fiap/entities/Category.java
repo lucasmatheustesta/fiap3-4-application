@@ -1,13 +1,9 @@
 package com.fiap.trabalho1.fiap.entities;
 
-import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class Category {
@@ -17,11 +13,6 @@ public class Category {
 	private String name;
     private String type;
 
-    @OneToMany(fetch = FetchType.EAGER,
-    		cascade = CascadeType.ALL,
-    		mappedBy = "category")
-    private List<Product> products;
-    
 	public Category() {}
     
     public Category(UUID idCateogry, String name, String type) {

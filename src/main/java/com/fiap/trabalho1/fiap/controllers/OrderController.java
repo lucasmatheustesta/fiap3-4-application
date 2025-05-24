@@ -1,33 +1,29 @@
 package com.fiap.trabalho1.fiap.controllers;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.Set;
+
 
 import com.fiap.trabalho1.fiap.entities.Order;
-import com.fiap.trabalho1.fiap.entities.OrderStatus;
 import com.fiap.trabalho1.fiap.external.request.OrderRequest;
 import com.fiap.trabalho1.fiap.external.request.UpdateOrderStatusRequest;
 import com.fiap.trabalho1.fiap.usecases.order.CreateOrderUseCase;
-import com.fiap.trabalho1.fiap.usecases.order.FindOrderByIdUseCase;
 import com.fiap.trabalho1.fiap.usecases.order.ListAllOrdersUseCase;
-import com.fiap.trabalho1.fiap.usecases.order.ListSortedOrdersUseCase;
-import com.fiap.trabalho1.fiap.usecases.order.UpdateOrderStatusUseCase;
 import com.fiap.trabalho1.fiap.usecases.order.WebhookApprovePaymentUseCase;
-
+import com.fiap.trabalho1.fiap.usecases.order.UpdateOrderStatusUseCase;
+import com.fiap.trabalho1.fiap.usecases.order.ListSortedOrdersUseCase;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/orders")
@@ -38,37 +34,41 @@ public class OrderController {
     private final ListAllOrdersUseCase listAllOrdersUseCase;
     private final WebhookApprovePaymentUseCase webhookApprovePaymentUseCase;
     private final ListSortedOrdersUseCase listSortedOrdersUseCase;
-    private final FindOrderByIdUseCase findOrderByIdUseCase;
+
 
     public OrderController(CreateOrderUseCase createOrderUseCase,
                        ListAllOrdersUseCase listAllOrdersUseCase,
                        WebhookApprovePaymentUseCase webhookApprovePaymentUseCase,
                        UpdateOrderStatusUseCase updateOrderStatusUseCase,
-                       ListSortedOrdersUseCase listSortedOrdersUseCase,
-                       FindOrderByIdUseCase findOrderByIdUseCase) {
+                       ListSortedOrdersUseCase listSortedOrdersUseCase) {
         this.createOrderUseCase = createOrderUseCase;
         this.listAllOrdersUseCase = listAllOrdersUseCase;
         this.webhookApprovePaymentUseCase = webhookApprovePaymentUseCase;
         this.updateOrderStatusUseCase = updateOrderStatusUseCase;
         this.listSortedOrdersUseCase = listSortedOrdersUseCase;
-        this.findOrderByIdUseCase = findOrderByIdUseCase;
     }
 
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody OrderRequest request) {
+        Set<String> allowedStatuses = Set.of("RECEIVED", "PREPARATION", "READY", "FINISHED");
+
+        if (!allowedStatuses.contains(request.getStatus())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Only are allowed: RECEIVED, PREPARATION, READY and FINISHED");
+        }
+
         Order order = createOrderUseCase.execute(
                 request.getClientId(),
                 request.getProductIds(),
                 request.getOrderTotal()
         );
-        
         return ResponseEntity.ok(order);
     }
 
-    @PutMapping("/{id}/approve")
+    @PutMapping("/orders/{id}/approve")
     public ResponseEntity<?> approveOrder(@PathVariable UUID id) {
         try {
-            Order order = this.webhookApprovePaymentUseCase.approveOrder(id);
+            Order order = webhookApprovePaymentUseCase.approveOrder(id);
             return ResponseEntity.ok(order);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -78,36 +78,25 @@ public class OrderController {
     @GetMapping
 	public ResponseEntity<Page<Order>> listOrders(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
 												  @RequestParam(value = "size", required = false, defaultValue = "20") int size) {
-    	Page<Order> orderList = this.listAllOrdersUseCase.listOrders(page, size);
-    	if (orderList.isEmpty()) {
+    	Page<Order> products = this.listAllOrdersUseCase.listOrders(page, size);
+    	if (products.isEmpty()) {
     		return ResponseEntity.notFound().build();
     	}
     	
-    	return ResponseEntity.ok(orderList);
+    	return ResponseEntity.ok(products);
 	}
-    
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findOrderById(@PathVariable UUID id) {
-    	Optional<Order> orderFound = this.findOrderByIdUseCase.execute(id);
-    	if (orderFound.isEmpty()) {
-    		return ResponseEntity.notFound().build();
-    	}
-    	
-    	return ResponseEntity.ok(orderFound.get());
-    }
 
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateOrderStatus(@PathVariable UUID id,
-                                               @RequestBody UpdateOrderStatusRequest request) {
+                                            @RequestBody UpdateOrderStatusRequest request) {
         try {
-            Set<String> allowedStatuses = Set.of(OrderStatus.RECEIVED.getStatus(), OrderStatus.PREPARATION.getStatus(), OrderStatus.READY.getStatus(), OrderStatus.FINISHED.getStatus());
-            
-            if (!allowedStatuses.contains(request.getStatus().getStatus())) {
+            Set<String> allowedStatuses = Set.of("RECEIVED", "PREPARATION", "READY", "FINISHED");
+
+            if (!allowedStatuses.contains(request.getStatus())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body("Only are allowed: RECEIVED, PREPARATION, READY and FINISHED");
             }
-            
-            Order order = this.updateOrderStatusUseCase.execute(id, request.getStatus());
+            Order order = updateOrderStatusUseCase.execute(id, request.getStatus());
             return ResponseEntity.ok(order);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -116,14 +105,16 @@ public class OrderController {
 
     @Operation(summary = "Lista pedidos", description = "A lista de pedidos deverá retorná-los com suas descrições, ordenados com a seguinte regra: 1. Pronto > Em Preparação > Recebido; 2. Pedidos mais antigos primeiro e mais novos depois; 3. Pedidos com status Finalizado não devem aparecer na lista")
     @GetMapping("/active")
-    public ResponseEntity<Page<Order>> listSortedOrders(@RequestParam(value = "page", defaultValue = "0") int page,
-            											@RequestParam(value = "size", defaultValue = "20") int size) {
+    public ResponseEntity<Page<Order>> listSortedOrders(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size) {
 
-        Page<Order> orders = this.listSortedOrdersUseCase.execute(page, size);
+        Page<Order> orders = listSortedOrdersUseCase.execute(page, size);
         if (orders.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(orders);
     }
+
 
 }

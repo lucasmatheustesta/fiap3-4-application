@@ -5,29 +5,24 @@ import java.util.UUID;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Product {
-    
-	@Id
+    @Id
     private UUID id;
     private String name;
     private BigDecimal value;
     private String description;
-//    private UUID categoryId;
+    private UUID categoryId;
 
-    @ManyToOne(optional=false)
-	private Category category;
-    
     public Product() {}
 
-    public Product(UUID idProduct, String name, BigDecimal value, String description, Category category) {
-    	this.id = idProduct;
-    	this.name = name;
-    	this.value = value;
-    	this.description = description;
-    	this.category = category; 
+    public Product(UUID idProduct, String name, BigDecimal value, String description, UUID categoryId) {
+        this.id = idProduct;
+        this.name = name;
+        this.value = value;
+        this.description = description;
+        this.categoryId = categoryId;
     }
 
     // Regras de negócio
@@ -55,12 +50,7 @@ public class Product {
         return description;
     }
 
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-	
+    public UUID getCategoryId() {
+        return categoryId;
+    }
 }

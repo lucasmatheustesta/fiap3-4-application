@@ -1,0 +1,53 @@
+services:
+  app:
+    image: 'fast-food-app:latest'
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=fiap
+      - POSTGRES_PASSWORD=fiap
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/fiap
+      - SPRING_DATASOURCE_USERNAME=fiap
+      - SPRING_DATASOURCE_PASSWORD=fiap
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - fiap
+    ports:
+      - "6060:6060"
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    user: "${UID}:${UID}"
+    container_name: pgadmin
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: lucas@lucas.com.br
+      PGADMIN_DEFAULT_PASSWORD: 123456789
+    ports:
+      - 8080:80
+    volumes:
+      - ../data/pgadmin:/var/lib/pgadmin
+    tty: true
+    networks:
+      - fiap
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_USER=fiap
+      - POSTGRES_PASSWORD=fiap
+      - POSTGRES_DB=fiap
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../data/postgres:/var/lib/postgresql/data
+    networks:
+      - fiap
+networks:
+  fiap:
+    driver: bridge

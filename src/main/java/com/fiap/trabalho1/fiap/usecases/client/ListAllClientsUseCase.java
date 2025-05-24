@@ -3,10 +3,12 @@ package com.fiap.trabalho1.fiap.usecases.client;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
 import com.fiap.trabalho1.fiap.entities.Client;
 import com.fiap.trabalho1.fiap.gateways.ClientRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Service
