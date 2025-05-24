@@ -1,0 +1,16 @@
+FROM maven:3.8.5-openjdk-17 as builder
+WORKDIR /app
+COPY pom.xml .
+COPY src/ ./src/
+COPY mvnw .
+RUN chmod +x ./mvnw
+#RUN mvn clean package -DskipTests
+RUN mvn clean package
+
+FROM eclipse-temurin:17-jdk as prod
+RUN mkdir /app
+COPY --from=builder /app/target/*.jar /app/app.jar
+ENV SERVER_PORT=6060
+WORKDIR /app
+EXPOSE 6060
+ENTRYPOINT ["java","-jar","/app/app.jar"]
