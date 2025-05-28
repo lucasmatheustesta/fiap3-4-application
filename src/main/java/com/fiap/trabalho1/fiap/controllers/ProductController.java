@@ -17,6 +17,7 @@ import com.fiap.trabalho1.fiap.usecases.product.ListAllProductsUseCase;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+	
     private final CreateProductUseCase createProductUseCase;
     private final ListAllProductsUseCase listAllProductsUseCase;
     
@@ -47,4 +48,5 @@ public class ProductController {
     	
     	return ResponseEntity.ok(products);
 	}
+    
 }
