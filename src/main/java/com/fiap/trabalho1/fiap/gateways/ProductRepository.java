@@ -14,7 +14,7 @@ import jakarta.transaction.Transactional;
 
 @Repository
 @Transactional
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, UUID> {
     
 	Optional<Product> findById(UUID id);
 	Page<Product> findAll(Pageable pageable);
