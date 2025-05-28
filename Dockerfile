@@ -1,11 +1,16 @@
 FROM maven:3.8.5-openjdk-17 as builder
 WORKDIR /app
+
 COPY pom.xml .
 COPY src/ ./src/
+COPY .mvn .mvn
 COPY mvnw .
+
 RUN chmod +x ./mvnw
-#RUN mvn clean package -DskipTests
-RUN mvn clean package
+#RUN mvn dependency:go-offline -B
+RUN mvn package -DskipTests
+
+######
 
 FROM eclipse-temurin:17-jdk as prod
 RUN mkdir /app
