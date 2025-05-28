@@ -14,7 +14,7 @@ import jakarta.transaction.Transactional;
 
 @Repository
 @Transactional
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
 	Optional<Category> findById(UUID id);
 	Page<Category> findAll(Pageable pageable);
