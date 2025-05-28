@@ -35,7 +35,7 @@ public class EditProductUseCase {
                 name,
                 value,
                 description,
-                category.get()
+                category.get().getIdCateogry()
         );
         
         return this.productRepository.save(product);
