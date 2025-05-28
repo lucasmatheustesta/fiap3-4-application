@@ -2,10 +2,10 @@ package com.fiap.trabalho1.fiap.usecases.client;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.fiap.trabalho1.fiap.entities.Client;
 import com.fiap.trabalho1.fiap.gateways.ClientRepository;
-
-import org.springframework.stereotype.Service;
 
 
 @Service
