@@ -15,7 +15,7 @@ import jakarta.transaction.Transactional;
 
 @Repository
 @Transactional
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, UUID> {
     
 	Optional<Order> findById(UUID id);
 	
