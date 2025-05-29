@@ -25,11 +25,11 @@ jobs:
       - name: Run tests
         run: mvn test
         
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-jar
-          path: target/*.jar
+#      - name: Upload build artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: app-jar
+#          path: target/*.jar
 
   build-and-push-image:
     needs: build-and-test
