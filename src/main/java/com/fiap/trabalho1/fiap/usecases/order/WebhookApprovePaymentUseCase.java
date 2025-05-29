@@ -1,17 +1,14 @@
 package com.fiap.trabalho1.fiap.usecases.order;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import java.util.UUID;
 import java.util.Optional;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.UUID;
 
+import org.springframework.stereotype.Service;
 
 import com.fiap.trabalho1.fiap.entities.Order;
 import com.fiap.trabalho1.fiap.gateways.OrderRepository;
 
-import org.springframework.stereotype.Service;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class WebhookApprovePaymentUseCase {
@@ -32,6 +29,7 @@ public class WebhookApprovePaymentUseCase {
 
         Order order = optionalOrder.get();
         order.approve();
+        
         return orderRepository.save(order);
     }
     
