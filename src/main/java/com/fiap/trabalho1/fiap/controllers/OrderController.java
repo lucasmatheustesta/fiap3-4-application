@@ -1,29 +1,31 @@
 package com.fiap.trabalho1.fiap.controllers;
+
+import java.util.Set;
 import java.util.UUID;
+
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
-import jakarta.persistence.EntityNotFoundException;
-import java.util.Set;
-
 
 import com.fiap.trabalho1.fiap.entities.Order;
 import com.fiap.trabalho1.fiap.external.request.OrderRequest;
 import com.fiap.trabalho1.fiap.external.request.UpdateOrderStatusRequest;
 import com.fiap.trabalho1.fiap.usecases.order.CreateOrderUseCase;
 import com.fiap.trabalho1.fiap.usecases.order.ListAllOrdersUseCase;
-import com.fiap.trabalho1.fiap.usecases.order.WebhookApprovePaymentUseCase;
-import com.fiap.trabalho1.fiap.usecases.order.UpdateOrderStatusUseCase;
 import com.fiap.trabalho1.fiap.usecases.order.ListSortedOrdersUseCase;
+import com.fiap.trabalho1.fiap.usecases.order.UpdateOrderStatusUseCase;
+import com.fiap.trabalho1.fiap.usecases.order.WebhookApprovePaymentUseCase;
+
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/orders")
@@ -115,6 +117,5 @@ public class OrderController {
         }
         return ResponseEntity.ok(orders);
     }
-
 
 }
