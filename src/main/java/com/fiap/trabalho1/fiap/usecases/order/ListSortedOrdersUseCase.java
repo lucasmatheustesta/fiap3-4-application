@@ -1,11 +1,12 @@
 package com.fiap.trabalho1.fiap.usecases.order;
 
-import com.fiap.trabalho1.fiap.entities.Order;
-import com.fiap.trabalho1.fiap.gateways.OrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import com.fiap.trabalho1.fiap.entities.Order;
+import com.fiap.trabalho1.fiap.gateways.OrderRepository;
 
 @Service
 public class ListSortedOrdersUseCase {
