@@ -2,7 +2,7 @@ name: Application CI/CD
 
 on:
   push:
-    branches: [ develop, main ]
+    branches: [ develop, main, feat/github-actions ]
   pull_request:
     branches: [ develop, main ]
 
@@ -25,11 +25,11 @@ jobs:
       - name: Run tests
         run: mvn test
         
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-jar
-          path: target/*.jar
+#      - name: Upload build artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: app-jar
+#          path: target/*.jar
 
   build-and-push-image:
     needs: build-and-test
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Download build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2
         with:
           name: app-jar
           path: target
