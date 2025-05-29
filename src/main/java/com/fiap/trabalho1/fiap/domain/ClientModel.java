@@ -31,8 +31,9 @@ public class ClientModel extends RepresentationModel<ClientModel> implements Ser
     @NotBlank(message = "O e-mail é obrigatório")
     private String email;
 
-    @ValidCPF
+
     @NotBlank(message = "O CPF é obrigatório")
+    @ValidCPF
     private String CPF;
 
     public UUID getIdClient() {
