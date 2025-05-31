@@ -1,20 +1,23 @@
 package com.fiap.trabalho1.fiap.domain;
 
 
-import com.fiap.trabalho1.fiap.utils.EStatus;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 class ProductModelTest {
 
@@ -28,7 +31,6 @@ class ProductModelTest {
 
     @Test
     void testValidProductModel() {
-        // Arrange
         ProductModel product = new ProductModel();
         product.setIdProduct(UUID.randomUUID());
         product.setName("Produto Teste");
@@ -36,65 +38,51 @@ class ProductModelTest {
         product.setDescription("Descrição do produto teste.");
 
 
-        // Act
         Set<ConstraintViolation<ProductModel>> violations = validator.validate(product);
 
-        // Assert
+
         assertTrue(violations.isEmpty());
     }
 
     @Test
     void testNameNotNullOrBlank() {
-        // Arrange
         ProductModel product = new ProductModel();
-        product.setName(""); // Nome inválido
+        product.setName("");
         product.setValue(BigDecimal.valueOf(99.99));
         product.setDescription("Descrição válida.");
 
 
-        // Act
         Set<ConstraintViolation<ProductModel>> violations = validator.validate(product);
 
-        // Assert
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void testValueNotNull() {
-        // Arrange
         ProductModel product = new ProductModel();
         product.setName("Produto Teste");
-        product.setValue(null); // Valor inválido
+        product.setValue(null);
         product.setDescription("Descrição válida.");
 
-
-        // Act
         Set<ConstraintViolation<ProductModel>> violations = validator.validate(product);
 
-        // Assert
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void testDescriptionNotNullOrBlank() {
-        // Arrange
         ProductModel product = new ProductModel();
         product.setName("Produto Teste");
         product.setValue(BigDecimal.valueOf(99.99));
-        product.setDescription(""); // Descrição inválida
+        product.setDescription("");
 
 
-        // Act
         Set<ConstraintViolation<ProductModel>> violations = validator.validate(product);
-assertTrue(violations.isEmpty());
-
+        assertTrue(violations.isEmpty());
    }
-
-
 
     @Test
     void testCategoryAssociation() {
-        // Arrange
         ProductModel product = new ProductModel();
         CategoryModel category = new CategoryModel();
         category.setIdCategory(UUID.randomUUID());
@@ -102,14 +90,12 @@ assertTrue(violations.isEmpty());
 
         product.setCategory(category);
 
-        // Assert
         assertNotNull(product.getCategory());
         assertEquals("Categoria Teste", product.getCategory().getName());
     }
 
     @Test
     void testGettersAndSetters() {
-        // Arrange
         UUID productId = UUID.randomUUID();
         CategoryModel category = new CategoryModel();
         category.setIdCategory(UUID.randomUUID());
@@ -134,14 +120,13 @@ assertTrue(violations.isEmpty());
 
     @Test
     void testSerializable() {
-        // Arrange
         ProductModel product = new ProductModel();
         product.setIdProduct(UUID.randomUUID());
         product.setName("Produto Teste");
         product.setValue(BigDecimal.valueOf(99.99));
         product.setDescription("Descrição do produto teste.");
 
-        // Act & Assert
+
         assertDoesNotThrow(() -> {
             java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
             java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos);
@@ -159,4 +144,5 @@ assertTrue(violations.isEmpty());
             assertEquals(product.getDescription(), deserializedProduct.getDescription());
         });
     }
+    
 }

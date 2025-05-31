@@ -30,6 +30,14 @@ public class EditProductUseCase {
     		throw new BusinessValidationException("Cateogria não encontrada");
     	}
     	
+    	if (value.signum() != 1) {
+    		throw new BusinessValidationException("Prodcut value must be a positive value");
+    	}
+    	
+    	if (name == null || name.isEmpty()) {
+    		throw new BusinessValidationException("Prodcut name must not be null or empty");
+    	}
+    	
         Product product = new Product(
         		productId,
                 name,

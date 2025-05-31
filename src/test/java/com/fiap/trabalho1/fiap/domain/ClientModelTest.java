@@ -17,6 +17,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
 public class ClientModelTest {
+	
     private Validator validator;
 
     @BeforeEach
@@ -42,7 +43,6 @@ public class ClientModelTest {
 
     @Test
     void testNameNotBlank() {
-        // Arrange
         ClientModel client = new ClientModel();
         client.setName("");
         client.setEmail("joao.silva@example.com");
@@ -87,15 +87,26 @@ public class ClientModelTest {
         ClientModel client = new ClientModel();
         client.setName("João Silva");
         client.setEmail("joao.silva@example.com");
-        client.setCPF("12345678900");
+        client.setCPF("97410437081");
+
+        Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
+
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void testCPFInvalid() {
+        ClientModel client = new ClientModel();
+        client.setName("João Silva");
+        client.setEmail("joao.silva@example.com");
+        client.setCPF("97410437000");
 
         Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
 
         assertFalse(violations.isEmpty());
         assertEquals("O CPF é inválido", violations.iterator().next().getMessage());
     }
-
-
+    
     @Test
     void testGettersAndSetters() {
         UUID id = UUID.randomUUID();

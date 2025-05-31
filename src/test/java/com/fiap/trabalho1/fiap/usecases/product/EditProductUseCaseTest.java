@@ -66,6 +66,56 @@ class EditProductUseCaseTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenValueIsZero() {
+    	UUID productId = UUID.randomUUID();
+        UUID categoryId = UUID.randomUUID();
+
+        String name = "Product1";
+        BigDecimal value = BigDecimal.TEN;
+        String description = "Description1";
+        
+        Category category = mock(Category.class);
+        when(category.getIdCateogry()).thenReturn(categoryId);
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        Product expectedProduct = new Product(productId, name, value, description, categoryId);
+        when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
+        
+        BusinessValidationException thrown = assertThrows(
+                BusinessValidationException.class,
+                () -> editProductUseCase.execute(productId, name, BigDecimal.ZERO,description, categoryId)
+        );
+
+        verify(productRepository, never()).save(any());
+        assertEquals("Prodcut value must be a positive value", thrown.getMessage());   
+    }
+    
+    @Test
+    void shouldThrowExceptionWhenValueIsNegative() {
+    	UUID productId = UUID.randomUUID();
+        UUID categoryId = UUID.randomUUID();
+
+        String name = "Product1";
+        BigDecimal value = BigDecimal.TEN;
+        String description = "Description1";
+        
+        Category category = mock(Category.class);
+        when(category.getIdCateogry()).thenReturn(categoryId);
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        Product expectedProduct = new Product(productId, name, value, description, categoryId);
+        when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
+        
+        BusinessValidationException thrown = assertThrows(
+                BusinessValidationException.class,
+                () -> editProductUseCase.execute(productId, name, new BigDecimal("-10.00"),description, categoryId)
+        );
+
+        verify(productRepository, never()).save(any());
+        assertEquals("Prodcut value must be a positive value", thrown.getMessage());   
+    }
+    
+    @Test
     void shouldThrowExceptionWhenCategoryNotFound() {
         UUID productId = UUID.randomUUID();
         UUID categoryId = UUID.randomUUID();
@@ -81,4 +131,56 @@ class EditProductUseCaseTest {
         verify(categoryRepository, times(1)).findById(categoryId);
         verify(productRepository, never()).save(any());
     }
+    
+    @Test
+    void shouldThrowExceptionWhenNameIsEmpty() {
+    	UUID productId = UUID.randomUUID();
+        UUID categoryId = UUID.randomUUID();
+
+        String name = "Product1";
+        BigDecimal value = BigDecimal.TEN;
+        String description = "Description1";
+        
+        Category category = mock(Category.class);
+        when(category.getIdCateogry()).thenReturn(categoryId);
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        Product expectedProduct = new Product(productId, name, value, description, categoryId);
+        when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
+        
+        BusinessValidationException thrown = assertThrows(
+                BusinessValidationException.class,
+                () -> editProductUseCase.execute(productId, "", new BigDecimal("10.00"), description, categoryId)
+        );
+
+        verify(productRepository, never()).save(any());
+        assertEquals("Prodcut name must not be null or empty", thrown.getMessage());
+    }
+    
+    @Test
+    void shouldThrowExceptionWhenNameIsNull() {
+    	UUID productId = UUID.randomUUID();
+        UUID categoryId = UUID.randomUUID();
+
+        String name = "Product1";
+        BigDecimal value = BigDecimal.TEN;
+        String description = "Description1";
+        
+        Category category = mock(Category.class);
+        when(category.getIdCateogry()).thenReturn(categoryId);
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        Product expectedProduct = new Product(productId, name, value, description, categoryId);
+        when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
+        
+    	
+    	BusinessValidationException thrown = assertThrows(
+                BusinessValidationException.class,
+                () -> editProductUseCase.execute(productId, null, new BigDecimal("10.00"), description, categoryId)
+        );
+
+        verify(productRepository, never()).save(any());
+        assertEquals("Prodcut name must not be null or empty", thrown.getMessage());
+    }
+    
 }

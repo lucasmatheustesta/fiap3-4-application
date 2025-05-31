@@ -52,18 +52,6 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody OrderRequest request) {
-        Set<String> allowedStatuses = Set.of("RECEIVED", "PREPARATION", "READY", "FINISHED");
-
-        if (!allowedStatuses.contains(request.getStatus())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Only are allowed: RECEIVED, PREPARATION, READY and FINISHED");
-        }
-        
-        if (request.getOrderTotal() <= 0.0) {
-        	return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Order total must be positive value");
-        }
-
         Order order = createOrderUseCase.execute(
                 request.getClientId(),
                 request.getProductIds(),
@@ -72,7 +60,7 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-    @PutMapping("/orders/{id}/approve")
+    @PutMapping("/{id}/approve")
     public ResponseEntity<?> approveOrder(@PathVariable UUID id) {
         try {
             Order order = webhookApprovePaymentUseCase.approveOrder(id);

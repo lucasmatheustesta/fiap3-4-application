@@ -1,10 +1,7 @@
 package com.fiap.trabalho1.fiap.controllers;
 
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,13 +27,6 @@ public class CategoryController {
 	
 	@PostMapping
 	public ResponseEntity<?> salvarEvento(@RequestBody CategoryRequest request) {
-		Set<String> allowedTypes = Set.of("SANDWICH", "DRINK", "DESSERT", "SIDE_DISH");
-
-		if (!allowedTypes.contains(request.getType())) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN)
-					.body("Only are allowed: SANDWICH, DRINK, DESSERT, SIDE_DISH");
-		}
-
 		Category categorySaved = this.createCateogryUseCase.execute(request.getName(), request.getType());
 		return ResponseEntity.ok(categorySaved);
 	}

@@ -31,7 +31,6 @@ class FindProdcutByIdUseCaseTest {
 
     @Test
     void shouldReturnProductIfExists() {
-        // Arrange
         UUID id = UUID.randomUUID();
         Product product = new Product();
         Optional<Product> optionalProduct = Optional.of(product);
