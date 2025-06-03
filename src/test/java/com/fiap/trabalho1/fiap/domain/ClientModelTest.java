@@ -1,19 +1,23 @@
 package com.fiap.trabalho1.fiap.domain;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 public class ClientModelTest {
+	
     private Validator validator;
 
     @BeforeEach
@@ -24,105 +28,87 @@ public class ClientModelTest {
 
     @Test
     void testValidClientModel() {
-        // Arrange
         ClientModel client = new ClientModel();
         client.setIdClient(UUID.randomUUID());
         client.setName("João Silva");
         client.setEmail("joao.silva@example.com");
-        client.setCPF("37589572810"); // Use um CPF válido para o teste
+        client.setCPF("37589572810");
 
-        // Act
+
         Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
 
 
-
-        // Assert
         assertTrue(violations.isEmpty());
     }
 
     @Test
     void testNameNotBlank() {
-        // Arrange
         ClientModel client = new ClientModel();
-        client.setName(""); // Nome em branco
+        client.setName("");
         client.setEmail("joao.silva@example.com");
         client.setCPF("37589572810");
 
-        // Act
         Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
 
-        // Assert
         assertFalse(violations.isEmpty());
         assertEquals("O nome é obrigatório", violations.iterator().next().getMessage());
     }
 
     @Test
     void testEmailValid() {
-        // Arrange
         ClientModel client = new ClientModel();
         client.setName("João Silva");
-        client.setEmail("joao.silva"); // Email inválido
+        client.setEmail("joao.silva");
         client.setCPF("37589572810");
 
-        // Act
         Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
 
-        // Assert
         assertFalse(violations.isEmpty());
         assertEquals("O e-mail deve ser válido", violations.iterator().next().getMessage());
     }
 
     @Test
     void testEmailNotBlank() {
-        // Arrange
         ClientModel client = new ClientModel();
         client.setName("João Silva");
-        client.setEmail(""); // Email em branco
+        client.setEmail("");
         client.setCPF("37589572810");
 
-        // Act
+
         Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
 
-        // Assert
+
         assertFalse(violations.isEmpty());
         assertEquals("O e-mail é obrigatório", violations.iterator().next().getMessage());
     }
 
     @Test
     void testCPFValid() {
-        // Arrange
         ClientModel client = new ClientModel();
         client.setName("João Silva");
         client.setEmail("joao.silva@example.com");
-        client.setCPF("12345678900"); // CPF inválido para o caso
+        client.setCPF("97410437081");
 
-        // Act
         Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
 
-        // Assert
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void testCPFInvalid() {
+        ClientModel client = new ClientModel();
+        client.setName("João Silva");
+        client.setEmail("joao.silva@example.com");
+        client.setCPF("97410437000");
+
+        Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
+
         assertFalse(violations.isEmpty());
         assertEquals("O CPF é inválido", violations.iterator().next().getMessage());
     }
-
-    @Test
-    void testCPFNotBlank() {
-        // Arrange
-        ClientModel client = new ClientModel();
-        client.setName("João Silva");
-        client.setEmail("joao.silva@example.com");
-        client.setCPF(""); // CPF em branco
-
-        // Act
-        Set<ConstraintViolation<ClientModel>> violations = validator.validate(client);
-
-        // Assert
-        assertFalse(violations.isEmpty());
-        assertEquals("O CPF é obrigatório", violations.iterator().next().getMessage());
-    }
-
+    
     @Test
     void testGettersAndSetters() {
-        // Arrange
         UUID id = UUID.randomUUID();
         ClientModel client = new ClientModel();
         client.setIdClient(id);
@@ -130,7 +116,7 @@ public class ClientModelTest {
         client.setEmail("joao.silva@example.com");
         client.setCPF("37589572810");
 
-        // Assert
+        
         assertEquals(id, client.getIdClient());
         assertEquals("João Silva", client.getName());
         assertEquals("joao.silva@example.com", client.getEmail());
@@ -139,14 +125,12 @@ public class ClientModelTest {
 
     @Test
     void testSerializable() {
-        // Arrange
         ClientModel client = new ClientModel();
         client.setIdClient(UUID.randomUUID());
         client.setName("João Silva");
         client.setEmail("joao.silva@example.com");
         client.setCPF("37589572810");
 
-        // Act & Assert
         assertDoesNotThrow(() -> {
             java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
             java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos);

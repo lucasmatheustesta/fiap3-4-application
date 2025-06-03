@@ -37,4 +37,5 @@ public class UpdateOrderStatusUseCase {
         order.setStatus(newStatus.toUpperCase());
         return orderRepository.save(order);
     }
+    
 }
