@@ -33,7 +33,7 @@ jobs:
 
   build-and-push-image:
     needs: build-and-test
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main')
+    #if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -73,7 +73,7 @@ jobs:
 
   deploy-dev:
     needs: build-and-push-image
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    #if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     runs-on: ubuntu-latest
     environment: development
     steps:
