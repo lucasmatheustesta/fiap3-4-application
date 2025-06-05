@@ -13,15 +13,15 @@ import org.junit.jupiter.api.Test;
 
 import com.fiap.trabalho1.fiap.gateways.CategoryRepository;
 
-class DeleteCateogryByIdUseCaseTest {
+class DeleteCategoryByIdUseCaseTest {
 
     private CategoryRepository categoryRepository;
-    private DeleteCateogryByIdUseCase deleteCateogryByIdUseCase;
+    private DeleteCategoryByIdUseCase deleteCategoryByIdUseCase;
 
     @BeforeEach
     void setUp() {
         categoryRepository = mock(CategoryRepository.class);
-        deleteCateogryByIdUseCase = new DeleteCateogryByIdUseCase(categoryRepository);
+        deleteCategoryByIdUseCase = new DeleteCategoryByIdUseCase(categoryRepository);
     }
 
     @Test
@@ -30,7 +30,7 @@ class DeleteCateogryByIdUseCaseTest {
         UUID categoryId = UUID.randomUUID();
 
         // Act
-        deleteCateogryByIdUseCase.execute(categoryId);
+        deleteCategoryByIdUseCase.execute(categoryId);
 
         // Assert
         verify(categoryRepository, times(1)).deleteById(categoryId);
@@ -43,7 +43,7 @@ class DeleteCateogryByIdUseCaseTest {
         doThrow(new RuntimeException("DB Error")).when(categoryRepository).deleteById(categoryId);
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> deleteCateogryByIdUseCase.execute(categoryId));
+        assertThrows(RuntimeException.class, () -> deleteCategoryByIdUseCase.execute(categoryId));
         verify(categoryRepository, times(1)).deleteById(categoryId);
     }
 }

@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import com.fiap.trabalho1.fiap.gateways.CategoryRepository;
 
 @Service
-public class DeleteCateogryByIdUseCase {
+public class DeleteCategoryByIdUseCase {
 
 	private final CategoryRepository categoryRepository;
 
-    public DeleteCateogryByIdUseCase(CategoryRepository categoryRepository) {
+    public DeleteCategoryByIdUseCase(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
     
