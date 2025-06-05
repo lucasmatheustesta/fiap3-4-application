@@ -8,7 +8,6 @@ public class OrderRequest {
     private UUID clientId;
     private List<UUID> productIds;
     private Double orderTotal;
-    private String status;
 
     public UUID getClientId() {
         return clientId;
@@ -22,8 +21,4 @@ public class OrderRequest {
         return orderTotal;
     }
 
-    public String getStatus() {
-        return status;
-    }
-    
 }
